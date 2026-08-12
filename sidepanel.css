@@ -1,0 +1,273 @@
+/* ── Clear Read side panel ──────────────────────────────────────────────────── */
+/* styles.css supplies the tokens and the shared result components; this file only
+   adds the chrome that is specific to a full-height panel rather than a popover. */
+
+:root {
+  color-scheme: light dark;
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text-1);
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-size: 13px;
+}
+
+.cr-sp {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+/* ── Header ─────────────────────────────────────────────────────────────────── */
+.cr-sp-head {
+  position: sticky;
+  top: 0;
+  z-index: 5;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 12px 14px;
+  background: var(--bg);
+  border-bottom: 1px solid var(--border);
+  overflow: hidden;
+}
+
+.cr-sp-brand { display: flex; align-items: center; gap: 8px; }
+.cr-sp-icon { width: 24px; height: 24px; border-radius: 6px; }
+
+.cr-sp-name {
+  font-family: 'Bricolage Grotesque', sans-serif;
+  font-size: 15px;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+
+.cr-sp-mode {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 9px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--brand);
+  background: var(--brand-bg);
+  border: 1px solid var(--brand-bd);
+  border-radius: 99px;
+  padding: 3px 8px;
+  white-space: nowrap;
+}
+
+/* ── Panes ──────────────────────────────────────────────────────────────────── */
+.cr-sp-pane {
+  flex: 1;
+  padding: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+/* display:flex above outranks the UA rule for [hidden], so every pane rendered
+   at once until this was added. */
+.cr-sp-pane[hidden] { display: none; }
+
+#pane-loading { align-items: center; justify-content: center; text-align: center; }
+
+.cr-sp-loading-msg { font-size: 12.5px; color: var(--text-2); margin: 12px 0 0; }
+.cr-sp-loading-sub { font-size: 10.5px; color: var(--text-3); margin: 4px 0 0; }
+
+/* ── Jobs ───────────────────────────────────────────────────────────────────── */
+/* Each block is headed by the question it answers, so neither button has to be
+   read cold. "Check this page as a document" meant nothing on its own. */
+.cr-sp-job {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding-bottom: 16px;
+  margin-bottom: 4px;
+  border-bottom: 1px solid var(--border);
+}
+
+.cr-sp-job:last-child { border-bottom: none; padding-bottom: 0; }
+
+.cr-sp-job-title {
+  margin: 0;
+  font-size: 13.5px;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  color: var(--text-1);
+}
+
+.cr-sp-job-sub {
+  margin: 0;
+  font-size: 11px;
+  line-height: 1.5;
+  color: var(--text-3);
+}
+
+/* ── Buttons ────────────────────────────────────────────────────────────────── */
+.cr-sp-btn {
+  width: 100%;
+  padding: 11px 12px;
+  border-radius: 8px;
+  font-family: 'Inter', sans-serif;
+  font-size: 12.5px;
+  font-weight: 600;
+  cursor: pointer;
+  border: 1px solid var(--border);
+  background: var(--bg-2);
+  color: var(--text-1);
+  transition: background 0.12s, border-color 0.12s;
+}
+
+.cr-sp-btn:hover { background: var(--bg-3); }
+
+.cr-sp-btn.primary {
+  background: var(--brand);
+  border-color: var(--brand);
+  color: #fff;
+}
+
+.cr-sp-btn.primary:hover { background: var(--brand-2); border-color: var(--brand-2); }
+
+.cr-sp-btn.ghost { background: transparent; }
+.cr-sp-btn.ghost:hover { background: var(--bg-2); }
+
+.cr-sp-btn.small {
+  padding: 8px 10px;
+  font-size: 11.5px;
+  font-weight: 500;
+  color: var(--text-2);
+}
+
+.cr-sp-actions { display: flex; gap: 8px; margin-top: 14px; }
+
+/* ── Drop zone ──────────────────────────────────────────────────────────────── */
+.cr-sp-drop {
+  border: 1.5px dashed var(--brand-bd);
+  border-radius: 10px;
+  background: var(--brand-bg);
+  padding: 22px 14px;
+  text-align: center;
+  cursor: pointer;
+  transition: background 0.14s, border-color 0.14s;
+}
+
+.cr-sp-drop:hover,
+.cr-sp-drop:focus-visible,
+.cr-sp-drop.dragging {
+  background: var(--bg-3);
+  border-color: var(--brand);
+  outline: none;
+}
+
+.cr-sp-drop.dragging { border-style: solid; }
+
+.cr-sp-drop-icon { color: var(--brand); line-height: 0; margin-bottom: 8px; }
+
+.cr-sp-drop-title {
+  margin: 0;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-1);
+}
+
+.cr-sp-drop-sub {
+  margin: 4px 0 0;
+  font-size: 10.5px;
+  color: var(--text-3);
+}
+
+.cr-sp-foot-note {
+  margin: 2px 0 0;
+  font-size: 10.5px;
+  line-height: 1.5;
+  color: var(--text-3);
+  text-align: center;
+}
+
+/* ── Error ──────────────────────────────────────────────────────────────────── */
+.cr-sp-error {
+  padding: 11px 12px;
+  border-radius: 8px;
+  border: 1px solid var(--bad-bd, rgba(192,57,43,0.35));
+  background: var(--bad-bg, rgba(192,57,43,0.08));
+  color: var(--bad-fg);
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+/* ── Result scaffolding ─────────────────────────────────────────────────────── */
+.cr-sp-file {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 8px;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 9.5px;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--text-3);
+  padding-bottom: 8px;
+  margin-bottom: 10px;
+  border-bottom: 1px solid var(--border);
+}
+
+.cr-sp-file b {
+  font-family: 'Inter', sans-serif;
+  font-size: 11.5px;
+  font-weight: 600;
+  letter-spacing: 0;
+  text-transform: none;
+  color: var(--text-1);
+  overflow-wrap: anywhere;
+}
+
+.cr-sp-sec { margin-bottom: 16px; }
+
+.cr-sp-sec > h3 {
+  margin: 0 0 8px;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 9.5px;
+  font-weight: 700;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  color: var(--text-3);
+}
+
+.cr-sp-lede {
+  margin: 0;
+  font-size: 13px;
+  line-height: 1.55;
+  color: var(--text-1);
+}
+
+.cr-sp-note {
+  margin: 6px 0 0;
+  font-size: 11.5px;
+  line-height: 1.5;
+  color: var(--text-2);
+}
+
+.cr-sp-list { margin: 0; padding-left: 16px; }
+.cr-sp-list li { font-size: 11.5px; line-height: 1.55; color: var(--text-2); margin-bottom: 5px; }
+
+.cr-sp-truncated {
+  font-size: 10px;
+  font-style: italic;
+  color: var(--text-3);
+  margin-top: 8px;
+}
+
+/* ── Footer ─────────────────────────────────────────────────────────────────── */
+.cr-sp-footer {
+  display: flex;
+  justify-content: space-between;
+  padding: 9px 14px;
+  border-top: 1px solid var(--border);
+  background: var(--bg-2);
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 9px;
+  color: var(--text-3);
+}

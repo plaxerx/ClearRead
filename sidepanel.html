@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Clear Read</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@700&family=Inter:wght@400;600;700&family=IBM+Plex+Mono:wght@500;600;700&display=swap">
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="sidepanel.css">
+</head>
+<body>
+  <div id="cr-sp" class="cr-sp">
+
+    <header class="cr-sp-head">
+      <div class="cr-scanline"></div>
+      <div class="cr-sp-brand">
+        <img src="icons/icon48.png" alt="" class="cr-sp-icon">
+        <span class="cr-sp-name">Clear Read</span>
+      </div>
+      <span class="cr-sp-mode" id="cr-sp-mode" hidden></span>
+    </header>
+
+    <!-- Landing: two jobs, each labelled with what it is actually for -->
+    <section class="cr-sp-pane" id="pane-home">
+
+      <div class="cr-sp-job">
+        <h2 class="cr-sp-job-title">What does this page say?</h2>
+        <button class="cr-sp-btn primary" id="btn-page">
+          <span id="btn-page-label">TL;DR this page</span>
+        </button>
+        <p class="cr-sp-job-sub">The gist, in a fraction of the length.</p>
+      </div>
+
+      <div class="cr-sp-job">
+        <h2 class="cr-sp-job-title">What am I agreeing to?</h2>
+
+        <div class="cr-sp-drop" id="dropzone" tabindex="0" role="button"
+             aria-label="Upload a contract or pitch to check">
+          <div class="cr-sp-drop-icon">
+            <svg width="26" height="26" viewBox="0 0 24 24" fill="none">
+              <path d="M5 2.4 H14.4 L19 7 V21.6 H5 Z" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/>
+              <path d="M14.2 2.6 V7.2 H18.8" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/>
+              <line x1="8" y1="12" x2="16" y2="12" stroke="currentColor" stroke-width="1.2"/>
+              <line x1="8" y1="15.4" x2="16" y2="15.4" stroke="currentColor" stroke-width="1.2"/>
+              <line x1="8" y1="18.8" x2="12.6" y2="18.8" stroke="currentColor" stroke-width="1.2"/>
+            </svg>
+          </div>
+          <p class="cr-sp-drop-title">Drop a contract or pitch here</p>
+          <p class="cr-sp-drop-sub">PDF, DOCX or text · or click to browse</p>
+          <input type="file" id="file-input" accept=".pdf,.docx,.txt,.md,.markdown,.rtf" hidden>
+        </div>
+
+        <p class="cr-sp-job-sub">
+          Do a deep dive of your formal documents so you get a better idea of
+          what you are agreeing to and the appropriate questions to ask.
+        </p>
+
+        <button class="cr-sp-btn ghost small" id="btn-page-doc">
+          Run Document Analysis
+        </button>
+      </div>
+    </section>
+
+    <!-- Working -->
+    <section class="cr-sp-pane" id="pane-loading" hidden>
+      <div class="cr-spinner"></div>
+      <p class="cr-sp-loading-msg" id="loading-msg">Working...</p>
+      <p class="cr-sp-loading-sub" id="loading-sub"></p>
+    </section>
+
+    <!-- Error -->
+    <section class="cr-sp-pane" id="pane-error" hidden>
+      <div class="cr-sp-error" id="error-msg"></div>
+      <button class="cr-sp-btn ghost" id="btn-back-error">Back</button>
+    </section>
+
+    <!-- Results -->
+    <section class="cr-sp-pane" id="pane-result" hidden>
+      <div id="result-body"></div>
+      <div class="cr-sp-actions">
+        <button class="cr-sp-btn ghost" id="btn-copy">Copy analysis</button>
+        <button class="cr-sp-btn ghost" id="btn-back">New check</button>
+      </div>
+    </section>
+
+    <footer class="cr-sp-footer">
+      <span id="cr-sp-brand-label">Powered by Claude</span>
+      <span>v2.9.0</span>
+    </footer>
+  </div>
+
+  <script type="module" src="sidepanel.js"></script>
+</body>
+</html>

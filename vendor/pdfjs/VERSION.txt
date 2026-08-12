@@ -1,0 +1,6 @@
+pdf.js v6.2.108
+Apache-2.0, Mozilla Foundation
+https://github.com/mozilla/pdf.js/releases/tag/v6.2.108
+
+Unmodified build output. Only pdf.mjs and pdf.worker.mjs are vendored;
+cmaps and standard fonts are omitted since only text extraction is used.

@@ -1,0 +1,19 @@
+# Local development notes. Not part of the shipped extension
+CLAUDE.md
+clear-read-conversation.html
+
+# Packaged builds
+*.zip
+*.crx
+*.pem
+
+# Editor / OS cruft
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Node (tests use node:test. No deps, but just in case)
+node_modules/
+npm-debug.log*

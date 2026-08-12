@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Clear Read</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@700&family=Inter:wght@400;600;700&family=IBM+Plex+Mono:wght@500;600;700&display=swap">
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      width: 316px;
+      background: var(--bg);
+      color: var(--text-1);
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      font-size: 13px;
+      /* Repaints instantly when the appearance dropdown flips the root class. */
+      transition: background 0.15s, color 0.15s;
+    }
+
+    /* ── Header ──────────────────────────────────────────────────── */
+    .header {
+      position: relative;
+      padding: 13px 16px 11px;
+      border-bottom: 1px solid var(--border);
+      background: var(--bg);
+      overflow: hidden;
+    }
+
+    .scanline {
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 2px;
+      background: linear-gradient(90deg, var(--brand) 0%, var(--brand) 32%, transparent 32%, transparent 40%, var(--brand) 40%, var(--brand) 56%, transparent 56%);
+      opacity: 0.85;
+    }
+
+    .logo-row { display: flex; align-items: center; justify-content: space-between; }
+    .logo { display: flex; align-items: center; gap: 9px; }
+    .logo-icon { width: 26px; height: 26px; border-radius: 6px; }
+
+    .logo-name {
+      font-family: 'Bricolage Grotesque', sans-serif;
+      font-size: 15px;
+      font-weight: 700;
+      letter-spacing: -0.01em;
+      color: var(--text-1);
+    }
+
+    .tagline {
+      font-size: 10px;
+      color: var(--text-3);
+      margin-top: 5px;
+      letter-spacing: 0.01em;
+    }
+
+    /* ── Toggle ──────────────────────────────────────────────────── */
+    .toggle-wrap { display: flex; align-items: center; gap: 8px; }
+
+    .toggle-label {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 9px;
+      font-weight: 600;
+      letter-spacing: 0.09em;
+      color: var(--text-3);
+      text-transform: uppercase;
+    }
+
+    .toggle-label.on { color: var(--brand); }
+
+    .toggle { position: relative; width: 38px; height: 21px; cursor: pointer; }
+    .toggle input { display: none; }
+
+    .toggle-track {
+      position: absolute; inset: 0;
+      border-radius: 99px;
+      background: var(--bg-3);
+      border: 1px solid var(--border);
+      transition: all 0.2s ease;
+    }
+
+    .toggle input:checked ~ .toggle-track {
+      background: var(--brand-bg);
+      border-color: var(--brand-bd);
+    }
+
+    .toggle-thumb {
+      position: absolute; top: 3px; left: 3px;
+      width: 13px; height: 13px;
+      border-radius: 50%;
+      background: var(--text-3);
+      transition: all 0.2s ease;
+    }
+
+    .toggle input:checked ~ .toggle-track .toggle-thumb {
+      left: 20px;
+      background: var(--brand);
+    }
+
+    /* ── Actions ─────────────────────────────────────────────────── */
+    .actions { padding: 12px 16px 6px; display: flex; flex-direction: column; gap: 7px; }
+
+    .btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      width: 100%;
+      padding: 10px 0;
+      border-radius: 8px;
+      font-family: 'Inter', sans-serif;
+      font-size: 12.5px;
+      font-weight: 600;
+      cursor: pointer;
+      border: 1px solid transparent;
+      transition: background 0.12s, border-color 0.12s;
+    }
+
+    .btn svg { flex-shrink: 0; }
+
+    .btn-primary { background: var(--brand); color: #fff; border-color: var(--brand); }
+    .btn-primary:hover { background: var(--brand-2); border-color: var(--brand-2); }
+
+    .btn-doc {
+      background: var(--warn-bg);
+      color: var(--warn-fg);
+      border-color: var(--warn-bd);
+    }
+
+    .btn-doc:hover { background: rgba(239,159,39,0.20); }
+
+    /* The tab URL looks legal. Almost certainly why the popup is open. */
+    .btn-doc.suggested {
+      box-shadow: 0 0 0 1px var(--warn-bd), 0 0 12px rgba(239,159,39,0.22);
+    }
+
+    .hint-line {
+      font-size: 10px;
+      color: var(--text-3);
+      text-align: center;
+      line-height: 1.45;
+      margin-top: -1px;
+    }
+
+    .status-line {
+      font-size: 10px;
+      color: var(--text-3);
+      text-align: center;
+      min-height: 12px;
+    }
+
+    /* ── Rows ────────────────────────────────────────────────────── */
+    .row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 9px 16px;
+      border-top: 1px solid var(--border);
+      background: var(--bg-2);
+    }
+
+    .row-label {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 9.5px;
+      font-weight: 600;
+      letter-spacing: 0.07em;
+      text-transform: uppercase;
+      color: var(--text-3);
+    }
+
+    select, input[type="password"], input[type="text"] {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      color: var(--text-1);
+      font-family: 'Inter', sans-serif;
+      font-size: 11.5px;
+      padding: 6px 9px;
+      outline: none;
+      cursor: pointer;
+    }
+
+    input[type="password"], input[type="text"] {
+      width: 100%;
+      cursor: text;
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 11px;
+      padding: 8px 10px;
+      border-radius: 7px;
+    }
+
+    input:focus, select:focus { border-color: var(--brand-bd); }
+
+    .disabled-banner {
+      display: none;
+      padding: 9px 16px;
+      background: var(--warn-bg);
+      border-top: 1px solid var(--warn-bd);
+      font-size: 10.5px;
+      color: var(--warn-fg);
+    }
+
+    .disabled-banner.show { display: block; }
+
+    /* ── Body ────────────────────────────────────────────────────── */
+    .body { padding: 14px 16px; border-top: 1px solid var(--border); }
+
+    label {
+      display: block;
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 9.5px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.07em;
+      color: var(--text-3);
+      margin-bottom: 6px;
+    }
+
+    .field { margin-bottom: 12px; }
+    .field select { width: 100%; }
+
+    .hint {
+      margin-top: 6px;
+      font-size: 10px;
+      color: var(--text-3);
+      line-height: 1.5;
+    }
+
+    .hint a { color: var(--brand); text-decoration: none; }
+    .hint a:hover { text-decoration: underline; }
+
+    button[type="submit"] {
+      margin-top: 12px;
+      width: 100%;
+      background: var(--brand);
+      border: none;
+      border-radius: 8px;
+      padding: 10px;
+      color: #fff;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      font-family: 'Inter', sans-serif;
+    }
+
+    button[type="submit"]:hover { background: var(--brand-2); }
+
+    .status { margin-top: 9px; font-size: 11px; text-align: center; min-height: 14px; }
+    .status.success { color: var(--good-fg); }
+    .status.error   { color: var(--bad-fg); }
+
+    hr { border: none; border-top: 1px solid var(--border); margin: 13px 0; }
+
+    .how-it-works { font-size: 10.5px; color: var(--text-3); line-height: 1.7; }
+    .how-it-works strong { color: var(--text-2); font-weight: 600; }
+
+    .disclosure {
+      margin-top: 12px;
+      padding: 9px 11px;
+      border: 1px solid var(--brand-bd);
+      border-radius: 7px;
+      background: var(--brand-bg);
+      font-size: 10px;
+      line-height: 1.55;
+      color: var(--text-2);
+    }
+
+    .disclosure strong { color: var(--text-1); }
+
+    .footer {
+      padding: 9px 16px;
+      border-top: 1px solid var(--border);
+      display: flex;
+      justify-content: space-between;
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 9px;
+      color: var(--text-3);
+      background: var(--bg-2);
+    }
+  </style>
+</head>
+<body>
+
+  <div class="header">
+    <div class="scanline"></div>
+    <div class="logo-row">
+      <div class="logo">
+        <img src="icons/icon48.png" class="logo-icon" id="header-icon" alt="" />
+        <span class="logo-name">Clear Read</span>
+      </div>
+      <div class="toggle-wrap">
+        <span class="toggle-label on" id="toggle-label">ON</span>
+        <label class="toggle" title="Enable / disable Clear Read">
+          <input type="checkbox" id="enabled-toggle" checked />
+          <div class="toggle-track"><div class="toggle-thumb"></div></div>
+        </label>
+      </div>
+    </div>
+    <div class="tagline">AI · Plagiarism · Bias · Documents</div>
+  </div>
+
+  <div class="actions">
+    <button id="page-tldr-btn" class="btn btn-primary">
+      <svg width="14" height="14" viewBox="0 0 22 22" fill="none">
+        <circle cx="9" cy="9" r="6.5" stroke="currentColor" stroke-width="1.8"/>
+        <line x1="13.6" y1="13.6" x2="20" y2="20" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+      </svg>
+      <span id="page-tldr-label">TL;DR this page</span>
+    </button>
+
+    <button id="doc-check-btn" class="btn btn-doc">
+      <svg width="13" height="13" viewBox="0 0 14 14" fill="none">
+        <path d="M3 1.4 H8.6 L11 3.8 V12.6 H3 Z" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round"/>
+        <line x1="5" y1="6.2" x2="9" y2="6.2" stroke="currentColor" stroke-width="1"/>
+        <line x1="5" y1="8.4" x2="9" y2="8.4" stroke="currentColor" stroke-width="1"/>
+        <line x1="5" y1="10.6" x2="7.4" y2="10.6" stroke="currentColor" stroke-width="1"/>
+      </svg>
+      <span>Check a document</span>
+    </button>
+    <p class="hint-line">Opens the side panel. Drop in a PDF, DOCX or text file.</p>
+    <p class="status-line" id="tldr-status"></p>
+  </div>
+
+  <div class="row">
+    <span class="row-label">Appearance</span>
+    <select id="theme-select">
+      <option value="system">System default</option>
+      <option value="light">Light</option>
+      <option value="dark">Dark</option>
+    </select>
+  </div>
+
+  <div class="disabled-banner" id="disabled-banner">
+    Clear Read is paused. No API calls will be made
+  </div>
+
+  <div class="body">
+    <form id="api-form">
+      <div class="field">
+        <label for="provider-select">AI provider</label>
+        <select id="provider-select">
+          <option value="anthropic">Anthropic (Claude)</option>
+          <option value="openai">OpenAI (Responses API)</option>
+        </select>
+      </div>
+      <div class="field">
+        <label for="api-key" id="api-key-label">Anthropic API Key</label>
+        <input type="password" id="api-key" placeholder="sk-ant-api03-..." autocomplete="off" />
+      </div>
+      <div class="field" id="model-row" hidden>
+        <label for="model-input">Fast analysis model</label>
+        <input type="text" id="model-input" value="gpt-5.6-luna" autocomplete="off" />
+        <label for="summary-model-input" style="margin-top:10px;">Summary + document model</label>
+        <input type="text" id="summary-model-input" value="gpt-5.6-sol" autocomplete="off" />
+        <div class="hint">Luna keeps quick checks lean; Sol handles pages, captions and documents.</div>
+      </div>
+      <div class="hint" id="api-key-hint">
+        Get your key at <a href="https://console.anthropic.com" target="_blank">console.anthropic.com</a>.<br>
+        Stored locally. Only sent to Anthropic's API.
+      </div>
+      <button type="submit">Save API Settings</button>
+    </form>
+    <div class="status" id="status"></div>
+
+    <hr>
+
+    <div class="how-it-works">
+      <strong>Text</strong>: highlight anything, drag the panel by its header<br>
+      <strong>Images</strong>: right-click → Clear Read<br>
+      <strong>Pages</strong>: TL;DR opens in the side panel and stays put<br>
+      <strong>Documents</strong>: upload a file, or check the page you are on
+    </div>
+
+    <div class="disclosure">
+      <strong>Not legal, financial, or tax advice.</strong> Clear Read strips the jargon and
+      hands you framed questions to bring to a licensed professional. It does not tell you
+      what is enforceable, and using it creates no attorney-client relationship.
+    </div>
+  </div>
+
+  <div class="footer">
+    <span>v2.9.0</span>
+    <span id="provider-brand">Powered by Claude</span>
+  </div>
+
+  <script src="settings.js"></script>
+</body>
+</html>
